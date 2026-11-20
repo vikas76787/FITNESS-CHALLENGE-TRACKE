@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#04100a">
+<title>Rise & Train — 30 Day Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#04100a;--green:#69e39a;--lime:#b8f27b;--cream:#f3f7ef;--muted:#a9bdb0;--gold:#ffd477;--red:#ff8a80;--line:rgba(255,255,255,.15);--glass:rgba(255,255,255,.07);--glass2:rgba(255,255,255,.12);--blur:blur(22px) saturate(170%);--shadow:0 24px 60px -22px rgba(0,0,0,.65),inset 0 1px 0 rgba(255,255,255,.2);--head:"Sora","Inter",ui-sans-serif,system-ui,sans-serif}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--cream);font:400 15px/1.6 "Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+button,input,select{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}
+option{background:#0c1f15;color:#f3f7ef}
+::selection{background:var(--green);color:#06210f}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:10px}::-webkit-scrollbar-track{background:transparent}
+
+/* ===== Background scene ===== */
+.scene{position:fixed;inset:0;z-index:-3;background:linear-gradient(180deg,#030b07,#06140d 60%,#0a2318)}
+.scene::before{content:"";position:absolute;inset:0;background:var(--art-bg) center bottom/cover no-repeat;opacity:.75}
+.scene::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0,transparent 0,rgba(3,11,7,.6) 100%)}
+.orb{position:fixed;z-index:-2;border-radius:50%;filter:blur(90px);pointer-events:none;animation:drift 22s ease-in-out infinite alternate}
+.o1{width:520px;height:520px;left:-140px;top:-120px;background:rgba(105,227,154,.32)}
+.o2{width:420px;height:420px;right:-120px;top:32%;background:rgba(255,212,119,.17);animation-delay:-8s}
+.o3{width:480px;height:480px;left:28%;bottom:-220px;background:rgba(184,242,123,.2);animation-delay:-14s}
+@keyframes drift{to{transform:translate3d(70px,45px,0) scale(1.18)}}
+
+/* ===== Header ===== */
+h1,h2,h3,h4,.heading,.brand,.timer,.stat strong{font-family:var(--head)}
+.top{position:sticky;top:12px;z-index:10;width:min(1160px,94vw);margin:12px auto 0;padding:10px 12px 10px 16px;border-radius:22px;background:rgba(8,24,16,.5);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--line);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:.14em;font-size:14px}
+.brandmark{width:40px;height:40px;border-radius:14px;background:linear-gradient(145deg,var(--lime),var(--green));color:#06210f;display:grid;place-items:center;font-size:20px;box-shadow:0 8px 24px -6px rgba(105,227,154,.7),inset 0 1px 0 rgba(255,255,255,.6)}
+.nav{display:flex;gap:4px;flex-wrap:wrap;padding:4px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+.nav button{border:0;background:transparent;color:var(--muted);padding:9px 16px;border-radius:12px;font-weight:600;font-size:14px;transition:.25s}
+.nav button:hover{color:var(--cream);background:rgba(255,255,255,.08)}
+.nav button.active{background:linear-gradient(135deg,var(--lime),var(--green));color:#06210f;font-weight:700;box-shadow:0 6px 20px -6px rgba(105,227,154,.8)}
+.ghost{border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);color:var(--cream);padding:10px 16px;border-radius:14px;font-weight:600;transition:.25s}
+.ghost:hover{border-color:rgba(105,227,154,.7);background:var(--glass2);transform:translateY(-1px)}
+.btn{border:0;border-radius:14px;padding:12px 20px;font-weight:700;background:linear-gradient(135deg,var(--lime),var(--green));color:#06210f;box-shadow:0 10px 26px -10px rgba(105,227,154,.9),inset 0 1px 0 rgba(255,255,255,.55);transition:.25s}
+.btn:hover{filter:brightness(1.07);transform:translateY(-2px);box-shadow:0 16px 30px -10px rgba(105,227,154,.95),inset 0 1px 0 rgba(255,255,255,.55)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+/* ===== Layout ===== */
+.wrap{width:min(1160px,92vw);margin:26px auto 70px}
+.page{display:none}.page.active{display:block;animation:rise .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.eyebrow{color:var(--green);font-size:12px;letter-spacing:.24em;font-weight:800;text-transform:uppercase}
+.heading{font-size:clamp(34px,5.2vw,62px);line-height:1.02;letter-spacing:-.04em;margin:10px 0 14px;font-weight:700}
+.heading span{background:linear-gradient(100deg,var(--lime),var(--green));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#milestones .heading span{background-image:linear-gradient(100deg,#fff1c2,var(--gold),#e9a93b)}
+.sub{color:#cfe0d4;max-width:600px;font-size:16px}
+.muted{color:var(--muted)}.small{font-size:12px}
+
+/* ===== Hero banners ===== */
+.hero{position:relative;overflow:hidden;border-radius:32px;min-height:250px;padding:40px 44px;display:flex;align-items:flex-end;border:1px solid var(--line);box-shadow:var(--shadow);background:linear-gradient(90deg,rgba(4,16,10,.9) 0%,rgba(4,16,10,.55) 52%,rgba(4,16,10,.05) 100%),var(--art) center 76%/cover}
+.hero::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(180deg,rgba(255,255,255,.1),transparent 35%);pointer-events:none}
+.hero-lg{min-height:430px}
+.herotxt{position:relative;z-index:1;max-width:620px}
+.herobtns{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+.herobtns .btn{padding:14px 24px}
+.hero .heading{margin-top:6px}
+
+/* ===== Glass panels ===== */
+.panel{position:relative;background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:var(--shadow)}
+.panel::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;background:linear-gradient(145deg,rgba(255,255,255,.45),transparent 40%,transparent 70%,rgba(105,227,154,.3));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.panel .panel{background:rgba(255,255,255,.05);box-shadow:none}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:22px 0}
+.stat{padding:18px 20px;border-radius:22px;background:var(--glass);-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid var(--line);box-shadow:var(--shadow);transition:.3s}
+.stat:hover{transform:translateY(-4px);border-color:rgba(105,227,154,.5)}
+.stat strong{display:block;font-size:32px;line-height:1.2;font-weight:700;background:linear-gradient(120deg,#fff,var(--lime));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+
+/* ===== Levels ===== */
+.level{padding:0;overflow:hidden;display:flex;flex-direction:column;transition:.35s;min-height:0}
+.level:hover{transform:translateY(-6px)}
+.level.selected{border-color:rgba(105,227,154,.85);box-shadow:0 0 0 1px rgba(105,227,154,.5),0 24px 60px -18px rgba(105,227,154,.5),inset 0 1px 0 rgba(255,255,255,.25);background:rgba(105,227,154,.1)}
+.lvimg{position:relative;height:150px;background:var(--lv) center/cover}
+.lvimg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(5,20,13,.8))}
+.lvbadge{position:absolute;z-index:1;left:16px;bottom:-18px;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;font-size:24px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.3);box-shadow:0 10px 24px -8px rgba(0,0,0,.6)}
+.lvbody{padding:30px 20px 20px;display:flex;flex-direction:column;flex:1}
+.level .tag{display:inline-block;color:var(--lime);font-size:11px;letter-spacing:.14em;font-weight:800}
+.level h3{font-size:22px;margin:6px 0 4px}
+.level p{color:var(--muted);margin:4px 0 8px;flex:1}
+.level button{margin-top:14px}
+
+.sectionhead{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:34px 0 16px}
+.sectionhead h2{margin:0;font-size:24px;letter-spacing:-.02em}
+.bar{height:10px;background:rgba(255,255,255,.1);border-radius:20px;overflow:hidden;box-shadow:inset 0 1px 3px rgba(0,0,0,.4)}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:20px;transition:width .6s;box-shadow:0 0 16px rgba(184,242,123,.7)}
+.routine{display:flex;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.routine:last-child{border:0}
+.routine strong{display:block;font-size:16px}
+.routine .mins{margin-left:auto;color:var(--lime);white-space:nowrap;font-size:12px;font-weight:700;padding:6px 12px;border-radius:20px;background:rgba(184,242,123,.12);border:1px solid rgba(184,242,123,.25)}
+.tmthumb{width:64px;height:64px;flex:none;border-radius:20px;background:var(--lv) center/cover;display:grid;place-items:center;font-size:26px;border:1px solid var(--line);box-shadow:0 10px 24px -10px rgba(0,0,0,.7)}
+.check{width:23px;height:23px;accent-color:var(--green)}
+
+/* ===== Milestones ===== */
+.milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.mile{position:relative;overflow:hidden;min-height:260px;transition:.35s}
+.mile:hover{transform:translateY(-6px)}
+.medalbox{height:128px;margin:-26px -26px 16px;display:grid;place-items:center;background:var(--art-rays) center/cover;border-bottom:1px solid rgba(255,255,255,.1)}
+.mile .medal{font-size:54px;filter:drop-shadow(0 8px 20px rgba(255,212,119,.55))}
+.mile.locked{opacity:.7}.mile.locked .medalbox{filter:grayscale(1) brightness(.7)}.mile.locked .medal{filter:none}
+.mile.unlocked{border-color:rgba(255,212,119,.6);background:linear-gradient(160deg,rgba(255,212,119,.16),rgba(255,255,255,.05));box-shadow:0 24px 60px -22px rgba(255,212,119,.45),inset 0 1px 0 rgba(255,255,255,.25)}
+.mile h3{margin:6px 0}
+.mile .quote{color:#f5dfae;min-height:48px}
+.mile .status{font-size:11px;font-weight:800;letter-spacing:.14em;color:var(--lime)}
+.mile.locked .status{color:var(--muted)}
+.mile .play{border:1px solid var(--line);background:rgba(255,255,255,.08);color:var(--cream);border-radius:12px;padding:9px 14px;font-weight:600;transition:.25s}
+.mile .play:hover{background:rgba(255,255,255,.16);border-color:var(--gold)}
+
+/* ===== Profile ===== */
+.profiletop{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.avatar{width:108px;height:108px;border-radius:50%;object-fit:cover;border:3px solid transparent;background:linear-gradient(#10281b,#10281b) padding-box,linear-gradient(135deg,var(--lime),var(--green),var(--gold)) border-box;box-shadow:0 0 0 6px rgba(255,255,255,.07),0 16px 40px -10px rgba(105,227,154,.6)}
+.profiletop h2{font-size:30px;margin:0}
+.field{display:grid;gap:7px;color:var(--muted);font-size:13px;font-weight:500}
+.field input,.field select{background:rgba(255,255,255,.07);color:var(--cream);border:1px solid var(--line);padding:12px 14px;border-radius:14px;width:100%;transition:.25s;outline:0}
+.field input:focus,.field select:focus{border-color:var(--green);background:rgba(255,255,255,.11);box-shadow:0 0 0 4px rgba(105,227,154,.18)}
+.field input[type=file]{padding:9px}
+.field input[type=file]::file-selector-button{border:0;background:rgba(105,227,154,.2);color:var(--green);padding:6px 12px;border-radius:9px;margin-right:10px;font-weight:600;cursor:pointer}
+input[type=range]{accent-color:var(--green)}
+.formrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}
+.daygrid{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+.day{aspect-ratio:1;border:1px solid var(--line);background:var(--glass);color:var(--muted);border-radius:14px;display:grid;place-items:center;font-weight:700;transition:.2s}
+.day:hover{background:var(--glass2);color:var(--cream);transform:translateY(-2px)}
+.day.done{background:linear-gradient(135deg,var(--lime),var(--green));color:#06210f;border-color:transparent;box-shadow:0 8px 20px -8px rgba(105,227,154,.8)}
+.day.today{outline:2px solid var(--gold);outline-offset:2px;box-shadow:0 0 22px rgba(255,212,119,.45)}
+.notice{padding:16px 18px;border-radius:18px;background:rgba(105,227,154,.1);border:1px solid rgba(105,227,154,.28);color:#e4ffec;margin:14px 0;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.timer{font-size:26px;font-weight:800;color:var(--lime);font-variant-numeric:tabular-nums}
+
+/* ===== Modal ===== */
+.overlay{position:fixed;inset:0;background:rgba(2,8,5,.62);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);z-index:30;display:none;place-items:center;padding:18px}
+.overlay.show{display:grid}
+.modal{width:min(520px,100%);text-align:center;padding:36px 28px;background:linear-gradient(160deg,rgba(255,212,119,.2),rgba(255,255,255,.07)),var(--art-rays) center top/cover;-webkit-backdrop-filter:var(--blur);backdrop-filter:var(--blur);border:1px solid rgba(255,212,119,.6);border-radius:30px;box-shadow:0 40px 100px -20px rgba(255,212,119,.4),inset 0 1px 0 rgba(255,255,255,.3);position:relative;overflow:hidden;animation:pop .55s cubic-bezier(.2,1.5,.4,1)}
+.modal .bigmedal{font-size:80px;animation:medal .9s ease-in-out infinite alternate}
+.modal h2{font-size:32px;margin:8px}
+.modal p{color:#f5dfae}
+.confetti{position:fixed;top:-20px;width:9px;height:15px;z-index:65;pointer-events:none;animation:fall 2.8s linear forwards}
+@keyframes pop{from{transform:scale(.55) rotate(-5deg);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes medal{to{transform:translateY(-8px) rotate(8deg);filter:drop-shadow(0 0 22px #ffd477)}}
+@keyframes fall{to{transform:translate(var(--drift),110vh) rotate(720deg);opacity:0}}
+.footer{text-align:center;color:var(--muted);padding:34px 0;font-size:12px;letter-spacing:.12em}
+
+/* ===== Auth ===== */
+.auth,.player{position:fixed;inset:0;z-index:40;display:none;overflow:auto;padding:18px;background:linear-gradient(rgba(3,11,7,.55),rgba(3,11,7,.8)),var(--art-hero) center/cover}
+.auth.show{display:flex}.player.show{display:block}
+.authbox{width:min(920px,100%);margin:auto;padding:0;overflow:hidden;display:grid;grid-template-columns:1.05fr 1fr}
+.authart{position:relative;padding:34px;display:flex;flex-direction:column;justify-content:space-between;min-height:520px;background:linear-gradient(180deg,rgba(4,16,10,.55),rgba(4,16,10,.1) 45%,rgba(4,16,10,.85)),var(--art-hero) 62% center/cover;border-right:1px solid var(--line)}
+.authart h2{font-size:clamp(28px,3.4vw,40px);line-height:1.08;letter-spacing:-.03em;margin:0 0 10px}
+.authart h2 span{color:var(--green)}
+.authform{padding:34px;display:flex;flex-direction:column;justify-content:center}
+.pl{width:min(780px,100%);margin:0 auto}
+.tabs{display:flex;gap:6px;margin:14px 0;padding:4px;border-radius:16px;background:rgba(255,255,255,.06)}
+.tabs button{flex:1;border:0;background:transparent}
+.tabs .ghost.active{background:linear-gradient(135deg,var(--lime),var(--green));color:#06210f;font-weight:700}
+.err{color:var(--red);min-height:20px;font-size:13px;margin-bottom:6px}
+
+/* ===== Workout player ===== */
+.ring{position:relative;width:min(260px,64vw);aspect-ratio:1;margin:14px auto;filter:drop-shadow(0 0 26px rgba(105,227,154,.35))}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:rgba(255,255,255,.12)}
+.ring .fg{stroke:var(--green);stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+.ring .t{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring .t b{font-size:58px;line-height:1;font-variant-numeric:tabular-nums;font-family:var(--head)}
+.ex{border:1px solid var(--line);background:var(--glass);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-radius:22px;margin:12px 0;text-align:left;overflow:hidden;box-shadow:0 14px 34px -16px rgba(0,0,0,.6)}
+.exhead{display:flex;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(120deg,var(--c1,#14543a),var(--c2,#0a2a1c));border-bottom:1px solid rgba(255,255,255,.1);position:relative;overflow:hidden}
+.exhead::after{content:"";position:absolute;right:-30px;top:-40px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.1)}
+.exicon{width:42px;height:42px;border-radius:14px;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:21px;border:1px solid rgba(255,255,255,.25);position:relative;z-index:1}
+.exhead h4{margin:0;font-size:17px;position:relative;z-index:1}
+.exbody{padding:14px 18px 16px}
+.p-Lower{--c1:#1c7a4f;--c2:#0b3322}.p-Upper{--c1:#2b6aa8;--c2:#0e2a44}.p-Core{--c1:#a8742b;--c2:#3b2a0c}.p-Cardio{--c1:#a83a4a;--c2:#3b0f17}.p-Mobility{--c1:#3d8f8a;--c2:#0d3330}
+.chip{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:rgba(184,242,123,.12);border:1px solid rgba(184,242,123,.25);color:var(--lime);margin:0 5px 4px 0}
+.ex ol{margin:10px 0;padding-left:20px;color:#dbe8df}
+.ex li{margin:3px 0}
+.tip{color:var(--gold);font-size:13px}
+.ctl{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.ctl .btn{padding:15px 34px;font-size:17px}
+#unlockModal{z-index:60}
+
+@media(max-width:760px){.top{align-items:flex-start;flex-direction:column;top:8px}.nav{width:100%;overflow:auto;flex-wrap:nowrap}.nav button{white-space:nowrap}.g3,.milestones{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{margin-top:20px}.hero{padding:28px 22px;min-height:230px}.hero-lg{min-height:400px}.authbox{grid-template-columns:1fr}.authart{display:none}}
+@media(max-width:480px){.g2,.g3,.milestones{grid-template-columns:1fr}.formrow{grid-template-columns:1fr}.panel{padding:19px}.medalbox{margin:-19px -19px 16px}.daygrid{grid-template-columns:repeat(6,1fr)}.hero-lg{min-height:380px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script>(function(){
+const U=s=>'url("data:image/svg+xml;utf8,'+encodeURIComponent(s)+'")';
+const svg=(b,w=1200,h=600)=>`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice">${b}</svg>`;
+let seed=11;const rnd=()=>(seed=(seed*9301+49297)%233280)/233280;
+const stars=(n,h)=>{let s='';for(let i=0;i<n;i++){const a=rnd(),b=rnd();s+=`<circle cx="${(a*1200)|0}" cy="${(b*h)|0}" r="${(.6+rnd()*1.3).toFixed(1)}" fill="#fff" opacity="${(.2+rnd()*.5).toFixed(2)}"/>`}return s};
+const man=(x,y,s,c,pose)=>{const L=pose==='run'?`<circle cx="8" cy="-64" r="9" fill="${c}" stroke="none"/><path d="M2-50L-6-20M2-46L18-36L28-48M0-46L-14-34L-26-42M-6-20L10-6L2 12M-6-20L-20-4L-34-10"/>`:`<circle cx="0" cy="-66" r="9" fill="${c}" stroke="none"/><path d="M0-52V-18M0-48L-20-72M0-48L20-72M0-18L-13 12M0-18L13 12"/>`;return `<g transform="translate(${x} ${y}) scale(${s})" stroke="${c}" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none">${L}</g>`};
+const scene=o=>{const [a,b,c]=o.sky,S=o.sun;return svg(`<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset=".6" stop-color="${b}"/><stop offset="1" stop-color="${c}"/></linearGradient><radialGradient id="s"><stop offset="0" stop-color="${S}" stop-opacity=".9"/><stop offset=".4" stop-color="${S}" stop-opacity=".25"/><stop offset="1" stop-color="${S}" stop-opacity="0"/></radialGradient></defs><rect width="1200" height="600" fill="url(#g)"/>${stars(60,260)}<circle cx="${o.sx}" cy="${o.sy}" r="${o.sr*4.5}" fill="url(#s)"/><circle cx="${o.sx}" cy="${o.sy}" r="${o.sr}" fill="${S}"/>${o.layers.map(l=>`<path d="${l[0]}" fill="${l[1]}" opacity="${l[2]}"/>`).join('')}${o.fig||''}`)};
+const peaks={
+ big:[["M0 420L140 330L260 400L420 270L560 390L700 300L860 410L1000 320L1200 430V600H0Z","#2a8a60",.5],["M0 480L180 390L330 470L520 360L700 470L880 380L1060 480L1200 420V600H0Z","#0d3f2b",.9],["M0 560L200 500L420 540L640 470L760 430L900 500L1200 540V600H0Z","#05150d",1]],
+ hills:[["M0 400Q200 320 400 390T800 380T1200 400V600H0Z","#2e9a68",.5],["M0 470Q250 390 500 460T1000 450T1200 470V600H0Z","#124a32",.9],["M0 540Q300 480 600 535T1200 520V600H0Z","#05150d",1]],
+ jag:[["M0 380L100 300L180 360L300 230L420 350L520 280L640 380L780 250L900 360L1040 290L1200 390V600H0Z","#c4552a",.45],["M0 470L150 380L260 450L420 330L560 460L720 360L880 470L1040 380L1200 470V600H0Z","#4a160c",.92],["M0 560L220 500L460 545L700 460L820 420L960 500L1200 535V600H0Z","#120503",1]]
+};
+const hero=scene({sky:['#04100a','#0e4630','#d98f4e'],sun:'#ffd477',sx:860,sy:300,sr:64,layers:peaks.big,fig:man(760,428,1.15,'#eafff2','win')});
+const beginner=scene({sky:['#06150e','#14583b','#7fd49a'],sun:'#e8ffb8',sx:330,sy:300,sr:55,layers:peaks.hills,fig:man(840,522,.9,'#eafff2','run')});
+const intermediate=scene({sky:['#05131a','#0d4a55','#46c2ab'],sun:'#d4ff8c',sx:480,sy:270,sr:58,layers:peaks.big,fig:man(700,452,1,'#eaffff','run')});
+const advanced=scene({sky:['#120604','#6a210f','#f08a3c'],sun:'#ffd477',sx:600,sy:260,sr:80,layers:peaks.jag,fig:man(820,418,1.15,'#fff0d8','win')});
+const bg=scene({sky:['#030b07','#071a11','#0b2a1b'],sun:'#69e39a',sx:900,sy:200,sr:1,layers:peaks.big});
+const plan=svg(`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#05140d"/><stop offset="1" stop-color="#14543a"/></linearGradient><linearGradient id="m" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9fff1"/><stop offset="1" stop-color="#8fb9a0"/></linearGradient><linearGradient id="p" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b8f27b"/><stop offset="1" stop-color="#2fb36b"/></linearGradient></defs><rect width="1200" height="600" fill="url(#g)"/><circle cx="850" cy="300" r="260" fill="#69e39a" opacity=".12"/><circle cx="850" cy="300" r="180" fill="none" stroke="#b8f27b" stroke-opacity=".25" stroke-width="2"/><circle cx="850" cy="300" r="340" fill="none" stroke="#fff" stroke-opacity=".08" stroke-width="2"/><g transform="translate(860 300) rotate(-24)"><rect x="-240" y="-13" width="480" height="26" rx="13" fill="url(#m)"/><rect x="150" y="-72" width="46" height="144" rx="14" fill="url(#p)"/><rect x="206" y="-54" width="34" height="108" rx="12" fill="url(#p)" opacity=".8"/><rect x="-196" y="-72" width="46" height="144" rx="14" fill="url(#p)"/><rect x="-240" y="-54" width="34" height="108" rx="12" fill="url(#p)" opacity=".8"/></g><g transform="translate(1090 450) scale(.8)"><path d="M-34 -50C-34 -112 34 -112 34 -50" fill="none" stroke="#cfe9d8" stroke-width="14" stroke-linecap="round"/><circle r="62" fill="url(#p)"/></g>`);
+const wedges=(n,r,w,col,op)=>Array.from({length:n},(_,i)=>{const a=i*2*Math.PI/n;return `<path d="M0 0L${(Math.cos(a)*r).toFixed(0)} ${(Math.sin(a)*r).toFixed(0)}L${(Math.cos(a+w)*r).toFixed(0)} ${(Math.sin(a+w)*r).toFixed(0)}Z" fill="${col}" opacity="${op}"/>`}).join('');
+const trophy=svg(`<defs><radialGradient id="g" cx=".72" cy=".5" r=".8"><stop offset="0" stop-color="#4a3a14"/><stop offset=".5" stop-color="#14301f"/><stop offset="1" stop-color="#050f0a"/></radialGradient><linearGradient id="t" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff1c2"/><stop offset=".5" stop-color="#ffd477"/><stop offset="1" stop-color="#c98a22"/></linearGradient></defs><rect width="1200" height="600" fill="url(#g)"/><g transform="translate(860 300)">${wedges(28,900,.07,'#ffd477',.06)}<g transform="scale(2) translate(0 -10)"><path d="M-70 -90H70V-20Q70 50 0 60Q-70 50 -70 -20Z" fill="url(#t)"/><path d="M-70 -70Q-120 -70 -110 -30Q-100 0 -62 0" fill="none" stroke="url(#t)" stroke-width="14" stroke-linecap="round"/><path d="M70 -70Q120 -70 110 -30Q100 0 62 0" fill="none" stroke="url(#t)" stroke-width="14" stroke-linecap="round"/><rect x="-14" y="58" width="28" height="42" fill="url(#t)"/><rect x="-60" y="100" width="120" height="22" rx="8" fill="url(#t)"/></g></g>`);
+const waves=svg(`<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07160e"/><stop offset=".6" stop-color="#145238"/><stop offset="1" stop-color="#b8f27b" stop-opacity=".6"/></linearGradient></defs><rect width="1200" height="600" fill="url(#g)"/>${[0,1,2,3].map(i=>`<path d="M0 ${300+i*60}C200 ${220+i*60} 400 ${380+i*60} 600 ${300+i*60}S1000 ${220+i*60} 1200 ${300+i*60}V600H0Z" fill="#69e39a" opacity="${(.08+i*.04).toFixed(2)}"/>`).join('')}<circle cx="1000" cy="150" r="200" fill="#ffd477" opacity=".1"/><circle cx="1000" cy="150" r="90" fill="#ffd477" opacity=".85"/>`);
+const rays=svg(`<defs><radialGradient id="r"><stop offset="0" stop-color="#ffd477" stop-opacity=".55"/><stop offset="1" stop-color="#ffd477" stop-opacity="0"/></radialGradient></defs><g transform="translate(200 110)">${wedges(18,400,.12,'#ffd477',.1)}</g><circle cx="200" cy="110" r="120" fill="url(#r)"/>`,400,200);
+const r=document.documentElement.style,set=(k,v)=>r.setProperty('--art-'+k,U(v));
+set('hero',hero);set('beginner',beginner);set('intermediate',intermediate);set('advanced',advanced);set('bg',bg);set('plan',plan);set('trophy',trophy);set('profile',waves);set('rays',rays);
+})();
+</script>
+</head>
+<body>
+<div class="scene"></div><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+<header class="top">
+ <div class="brand"><div class="brandmark">✦</div><span>RISE <span style="color:var(--green)">&</span> TRAIN</span></div>
+ <nav class="nav"><button class="active" data-page="dashboard">Dashboard</button><button data-page="challenge">30-Day Plan</button><button data-page="milestones">Milestones</button><button data-page="profile">My Profile</button></nav>
+ <button class="ghost" id="userBtn" onclick="logout()" style="display:none"></button>
+</header>
+<main class="wrap">
+<section class="page active" id="dashboard">
+ <div class="hero hero-lg" style="--art:var(--art-hero)"><div class="herotxt"><div class="eyebrow">Your next level starts today</div><h1 class="heading">Small steps.<br><span>Stronger you.</span></h1>
+ <p class="sub">Choose your training level, show up each day, and turn your effort into achievements. Your progress is the main story.</p>
+ <div class="herobtns"><button class="btn" onclick="startDay(Math.min(state.completed.length+1,30))">▶ Start today's workout</button><button class="ghost" onclick="go('challenge')">View 30-day plan</button></div></div></div>
+ <div class="stats">
+  <div class="stat"><strong id="doneStat">0/30</strong><span class="muted small">Days completed</span></div>
+  <div class="stat"><strong id="streakStat">0 🔥</strong><span class="muted small">Current streak</span></div>
+  <div class="stat"><strong id="mileStat">0/6</strong><span class="muted small">Milestones earned</span></div>
+  <div class="stat"><strong id="nextStat">Day 1</strong><span class="muted small">Next milestone</span></div>
+ </div>
+ <div class="panel">
+  <div class="sectionhead" style="margin-top:0"><h2>Choose your level</h2><span class="muted small">Change anytime</span></div>
+  <div class="grid g3" id="levelCards"></div>
+  <div class="sectionhead"><h2>Today's mission</h2><span class="muted small" id="todayDate"></span></div>
+  <div id="todayMission"></div>
+ </div>
+ <div class="sectionhead"><h2>Your journey</h2><button class="ghost" onclick="go('milestones')">View all milestones →</button></div>
+ <div class="bar"><span id="mainBar"></span></div><p class="muted small" id="progressLabel">0% complete</p>
+ <div class="grid g3" id="previewMiles"></div>
+</section>
+
+<section class="page" id="challenge">
+ <div class="hero" style="--art:var(--art-plan)"><div class="herotxt"><div class="eyebrow">Train with a plan</div><h1 class="heading">Your 30-day<br><span>workout calendar.</span></h1>
+ <p class="sub">The plan adapts to your selected level. Complete one session per day; rest and recovery days count too.</p></div></div><div style="height:20px"></div>
+ <div class="panel">
+  <div class="sectionhead" style="margin-top:0"><h2 id="planTitle">Beginner plan</h2><span class="muted small" id="planCount">0 / 30 complete</span></div>
+  <div class="bar"><span id="planBar"></span></div>
+  <div class="sectionhead"><h2>30-day schedule</h2><span class="muted small">Tap a day to view details</span></div>
+  <div class="daygrid" id="calendar"></div>
+  <div class="notice" id="dayDetail" style="margin-top:18px"></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:14px 0"><button class="btn" id="startBtn" onclick="startDay(selectedDay)">▶ Start workout</button></div>
+  <div id="dayExercises"></div>
+  <div class="sectionhead"><h2>Body-part workouts</h2><span class="muted small">Train what you want (⭐ = your focus)</span></div>
+  <div id="partBtns" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px"></div>
+  <button class="btn" id="completeBtn" onclick="completeToday()">✓ Complete today's session</button>
+  <p class="muted small">Safety first: warm up, use controlled form, and stop if you feel sharp pain or dizziness. Adjust repetitions to your ability.</p>
+ </div>
+</section>
+
+<section class="page" id="milestones">
+ <div class="hero" style="--art:var(--art-trophy)"><div class="herotxt"><div class="eyebrow" style="color:var(--gold)">Every step deserves recognition</div><h1 class="heading">Milestones &<br><span>big moments.</span></h1>
+ <p class="sub">Six meaningful achievements. Each one has its own motivational line and audio playback. Unlock them by completing challenge days.</p></div></div>
+ <div class="stats"><div class="stat"><strong id="earnedCount">0</strong><span class="muted small">Unlocked</span></div><div class="stat"><strong>6</strong><span class="muted small">Total milestones</span></div><div class="stat"><strong id="leftCount">6</strong><span class="muted small">Still ahead</span></div><div class="stat"><strong id="milestoneNext">Day 1</strong><span class="muted small">Next reward</span></div></div>
+ <div class="milestones" id="allMiles"></div>
+</section>
+
+<section class="page" id="profile">
+ <div class="hero" style="--art:var(--art-profile);min-height:210px"><div class="herotxt"><div class="eyebrow">This journey is yours</div><h1 class="heading">Your fitness<br><span>profile.</span></h1></div></div><div style="height:20px"></div>
+ <div class="panel">
+  <div class="profiletop"><img class="avatar" id="avatar" alt="Profile photo" src=""><div><div class="eyebrow">Challenge member</div><h2 id="profileName">Your Name</h2><div class="muted" id="profileLevel">Beginner · 30-day challenge</div><p class="muted small" id="profileSince"></p></div></div>
+  <div class="formrow"><label class="field">Your name<input id="nameInput" maxlength="28" placeholder="Enter your name"></label><label class="field">Training level<select id="levelSelect"><option value="beginner">Beginner</option><option value="intermediate">Intermediate</option><option value="advanced">Advanced</option></select></label></div>
+  <div class="formrow"><label class="field">Profile photo<input id="photoInput" type="file" accept="image/*"></label><div style="display:flex;align-items:end"><button class="btn" onclick="saveProfile()">Save profile</button></div></div>
+ </div>
+ <div class="sectionhead"><h2>Your body</h2><span class="muted small">Used for BMI & tips</span></div>
+ <div class="panel"><div class="formrow"><label class="field">Age<input id="ageIn" type="number" min="10" max="90"></label><label class="field">Height (cm)<input id="htIn" type="number" min="100" max="230"></label></div>
+ <div class="formrow"><label class="field">Weight (kg)<input id="wtIn" type="number" min="30" max="250"></label><label class="field">Goal<select id="goalIn"><option>Stay fit</option><option>Lose fat</option><option>Build muscle</option><option>Improve stamina</option></select></label></div>
+ <div class="formrow"><label class="field">Focus body part<select id="focusIn"><option value="Full">Full body</option><option value="Upper">Upper body</option><option value="Lower">Lower body</option><option value="Core">Core</option><option value="Cardio">Cardio</option></select></label><div style="display:flex;align-items:end"><button class="btn" onclick="saveBody()">Save body details</button></div></div>
+ <div class="notice" id="bmiBox"></div></div>
+ <div class="sectionhead"><h2>Coach voice</h2><span class="muted small">Pick the voice you like best</span></div>
+ <div class="panel"><div class="formrow"><label class="field">Voice<select id="voiceSel"></select></label><label class="field">Speed<input id="rateIn" type="range" min="0.7" max="1.15" step="0.05"></label></div>
+ <button class="btn" onclick="testVoice()">▶ Test voice</button> <label class="muted small" style="margin-left:10px"><input type="checkbox" id="coachChk"> Coach speaks during workout</label></div>
+ <div class="sectionhead"><h2>Your achievements</h2><span class="muted small">Unlocked milestones stay here</span></div>
+ <div class="milestones" id="profileMiles"></div>
+ <div class="sectionhead"><h2>Challenge record</h2></div><div class="panel"><div class="stats"><div class="stat"><strong id="pDays">0</strong><span class="muted small">Days completed</span></div><div class="stat"><strong id="pStreak">0</strong><span class="muted small">Best streak</span></div><div class="stat"><strong id="pMinutes">0</strong><span class="muted small">Minutes trained</span></div><div class="stat"><strong id="pRate">0%</strong><span class="muted small">Completion</span></div></div><div class="bar"><span id="profileBar"></span></div></div>
+</section>
+<div class="footer">RISE & TRAIN · CONSISTENCY BUILDS RESULTS · Your pace, your progress.</div>
+</main>
+<div class="auth" id="auth"><div class="panel authbox"><div class="authart"><div class="brand"><div class="brandmark">✦</div><span>RISE <span style="color:var(--green)">&</span> TRAIN</span></div><div><h2>Rise early.<br><span>Train daily.</span><br>Become unstoppable.</h2><p class="muted" style="margin:0">30 days. Your pace. Your progress, beautifully tracked.</p></div></div><div class="authform"><div class="brand"><div class="brandmark">✦</div><span>RISE <span style="color:var(--green)">&</span> TRAIN</span></div>
+<h2 style="margin:16px 0 4px">Welcome 👋</h2><p class="muted small" style="margin:0">Log in to save your progress, body details and workouts.</p>
+<div class="tabs"><button class="ghost active" id="tabLogin" onclick="authTab('login')">Log in</button><button class="ghost" id="tabSignup" onclick="authTab('signup')">Sign up</button></div>
+<label class="field" id="nameRow" style="display:none;margin-bottom:10px">Your name<input id="authName" maxlength="28" placeholder="Your name"></label>
+<label class="field">Email<input id="authEmail" type="email" placeholder="you@example.com" autocomplete="username"></label>
+<label class="field" style="margin:10px 0">Password<input id="authPw" type="password" placeholder="Min 6 characters" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()"></label>
+<div class="err" id="authErr"></div><button class="btn" style="width:100%" id="authGo" onclick="doAuth()">Log in</button>
+<p class="muted small">Accounts are saved only on this device (in your browser).</p></div></div></div>
+<div class="player" id="player"><div class="pl panel">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><div class="eyebrow" id="plHead"></div><span class="muted small" id="plCount"></span></div><div><button class="ghost" id="muteBtn" onclick="toggleMute()">🔊 Voice on</button> <button class="ghost" onclick="stopSession()">✕ Close</button></div></div>
+<div class="bar" style="margin-top:12px"><span id="plBar"></span></div>
+<div style="text-align:center"><div class="eyebrow" id="plPhase" style="margin-top:14px"></div><h2 id="plName" style="font-size:30px;margin:4px 0"></h2><div class="muted" id="plReps"></div>
+<div class="ring"><svg viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="54"/><circle class="fg" id="ringFg" cx="60" cy="60" r="54" stroke-dasharray="339.3" stroke-dashoffset="0"/></svg><div class="t"><b id="plTime">0</b><span class="muted small">seconds</span></div></div>
+<div class="ctl"><button class="ghost" onclick="skip(-1)">⏮ Back</button><button class="btn" id="goBtn" onclick="toggleRun()">▶ Start</button><button class="ghost" onclick="skip(1)">Skip ⏭</button></div></div>
+<div id="plInfo"></div></div></div>
+<div class="overlay" id="unlockModal" role="dialog" aria-modal="true"><div class="modal"><div class="bigmedal" id="modalIcon">🏆</div><div class="eyebrow">Achievement unlocked</div><h2 id="modalTitle">First Step</h2><p id="modalQuote"></p><button class="btn" onclick="playCurrentQuote()">▶ Play motivation</button> <button class="ghost" onclick="closeModal()">Continue</button></div></div>
+<script>
+const LEVELS={
+ beginner:{name:"Beginner",icon:"🌱",tag:"START STRONG",desc:"Build the habit with gentle, low-impact sessions.",time:"15–25 min",moves:[["Full body starter","March in place · Wall push-ups · Squats · Easy plank","15 min"],["Lower body","Chair squats · Reverse lunges · Glute bridges","18 min"],["Upper body","Wall push-ups · Arm circles · Bird dogs","15 min"],["Cardio & core","Marching · Step jacks · Dead bugs","18 min"],["Core strength","Knee plank · Crunches · Heel taps","15 min"],["Full body flow","Squats · Wall push-ups · Glute bridges","20 min"],["Rest & stretch","Gentle mobility · Deep breathing","10 min"]]},
+ intermediate:{name:"Intermediate",icon:"⚡",tag:"BUILD POWER",desc:"Push your stamina and strength with balanced training.",time:"25–35 min",moves:[["Full body strength","Squats · Push-ups · Lunges · Plank","30 min"],["Lower body","Reverse lunges · Squats · Calf raises · Glute bridge","30 min"],["Upper body","Push-ups · Pike push-ups · Triceps dips · Plank","30 min"],["HIIT cardio","Jumping jacks · High knees · Mountain climbers","25 min"],["Core & abs","Bicycle crunches · Leg raises · Russian twists","25 min"],["Full body circuit","Squats · Push-ups · Lunges · Plank","35 min"],["Recovery","Walk · Hip mobility · Stretch","20 min"]]},
+ advanced:{name:"Advanced",icon:"🔥",tag:"PUSH YOUR LIMITS",desc:"A demanding routine for experienced, well-conditioned movers.",time:"35–45 min",moves:[["Full body power","Squat jumps · Push-ups · Walking lunges · Plank","40 min"],["Lower body strength","Split squats · Jump squats · Hip thrusts · Calf raises","40 min"],["Upper body strength","Push-ups · Pike push-ups · Dips · Shoulder taps","40 min"],["Conditioning","Burpees · High knees · Mountain climbers · Skaters","35 min"],["Core endurance","Hollow hold · Leg raises · Side plank · Bicycle crunches","35 min"],["Full body challenge","Squats · Push-ups · Lunges · Burpees","45 min"],["Active recovery","Easy walk · Stretch · Mobility","25 min"]]}
+};
+const MILES=[
+ {day:1,title:"First Step",icon:"🌱",quote:"You showed up. That is where every strong journey begins. Be proud of your first step."},
+ {day:3,title:"Spark Ignited",icon:"⚡",quote:"Three days of choosing progress. Small actions are becoming a powerful promise to yourself."},
+ {day:7,title:"Week Warrior",icon:"🛡️",quote:"One full week! You are proving that discipline can be stronger than excuses. Keep going."},
+ {day:14,title:"Consistency Champion",icon:"🔥",quote:"Two weeks of effort. You are not waiting for motivation anymore — you are building discipline."},
+ {day:21,title:"Habit Master",icon:"💎",quote:"Twenty-one days of commitment. Your choices are shaping a stronger, more confident you."},
+ {day:30,title:"Thirty-Day Legend",icon:"👑",quote:"You did it! Thirty days of showing up. Celebrate your progress, then set your next bold goal."}
+];
+const KEY="riseTrain_v2";
+let state=null,user=null;
+let selectedDay=1,currentQuote="";
+const $=id=>document.getElementById(id);
+const save=()=>{if(user)localStorage.setItem("riseTrain_u_"+user,JSON.stringify(state))};
+const completed=()=>new Set(state.completed||[]);
+const nextMilestone=()=>MILES.find(m=>!state.unlocked.includes(m.day));
+function go(page){document.querySelectorAll(".page").forEach(p=>p.classList.toggle("active",p.id===page));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));render();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".nav button").forEach(b=>b.addEventListener("click",()=>go(b.dataset.page)));
+function planFor(day){const l=LEVELS[state.level];const w=Math.floor((day-1)/7);const base=l.moves[(day-1)%7];let title=base[0],desc=base[1],time=base[2];if(state.level==="beginner"&&day>7&&day%7!==0)time="20 min";if(state.level==="intermediate"&&day>7&&day%7!==0)time="35 min";if(state.level==="advanced"&&day>7&&day%7!==0)time="45 min";return {title,desc,time,week:w+1}}
+function streak(){let n=0;const set=completed();for(let i=30;i>=1;i--){if(set.has(i))n++;else if(n)break}return n}
+function bestStreak(){let best=0,n=0;for(let i=1;i<=30;i++){if(state.completed.includes(i)){n++;best=Math.max(best,n)}else n=0}return best}
+function render(){
+ const n=state.completed.length,earned=state.unlocked.length,next=nextMilestone();
+ $("doneStat").textContent=n+"/30";$("streakStat").textContent=streak()+" 🔥";$("mileStat").textContent=earned+"/6";$("nextStat").textContent=next?"Day "+next.day:"Complete!";
+ $("todayDate").textContent=new Date().toLocaleDateString(undefined,{weekday:"long",month:"short",day:"numeric"});
+ $("levelCards").innerHTML=Object.entries(LEVELS).map(([key,l])=>`<div class="panel level ${state.level===key?"selected":""}"><div class="lvimg" style="--lv:var(--art-${key})"><span class="lvbadge">${l.icon}</span></div><div class="lvbody"><span class="tag">${l.tag}</span><h3>${l.name}</h3><p>${l.desc}</p><div class="muted small">${l.time} per session</div><button class="${state.level===key?"btn":"ghost"}" onclick="setLevel('${key}')">${state.level===key?"✓ Selected":"Choose level"}</button></div></div>`).join("");
+ const today=planFor(Math.min(n+1,30));$("todayMission").innerHTML=`<div class="routine"><div class="tmthumb" style="--lv:var(--art-${state.level})">🏋️</div><div><strong>Day ${Math.min(n+1,30)} · ${today.title}</strong><span class="muted small">${today.desc}</span></div><span class="mins">${today.time}</span></div>${n>=30?'<div class="notice">Challenge complete! Set a new goal and keep your momentum.</div>':`<button class="btn" onclick="startDay(${Math.min(n+1,30)})">▶ Start workout now</button> <button class="ghost" onclick="go('challenge')">Full details →</button>`}`;
+ $("mainBar").style.width=n/30*100+"%";$("progressLabel").textContent=Math.round(n/30*100)+"% complete · "+(30-n)+" sessions to go";
+ $("previewMiles").innerHTML=MILES.slice(0,3).map(mileCard).join("");
+ $("planTitle").textContent=LEVELS[state.level].name+" plan";$("planCount").textContent=n+" / 30 complete";$("planBar").style.width=n/30*100+"%";
+ $("calendar").innerHTML=Array.from({length:30},(_,i)=>`<button class="day ${state.completed.includes(i+1)?"done":""} ${selectedDay===i+1?"today":""}" onclick="selectDay(${i+1})">${state.completed.includes(i+1)?"✓":i+1}</button>`).join("");
+ const detail=planFor(selectedDay);$("dayDetail").innerHTML=`<b>DAY ${selectedDay} · WEEK ${detail.week} — ${detail.title}</b><br><span>${detail.desc}</span><br><span class="muted small">Suggested duration: ${detail.time}</span>${state.completed.includes(selectedDay)?'<br><b style="color:var(--green)">✓ Completed</b>':''}`;
+ $("completeBtn").disabled=state.completed.includes(n+1)||n>=30;$("completeBtn").textContent=n>=30?"Challenge completed":state.completed.includes(n+1)?"Today's session completed":"✓ Complete today's session (Day "+(n+1)+")";
+ $("allMiles").innerHTML=MILES.map(mileCard).join("");$("earnedCount").textContent=earned;$("leftCount").textContent=6-earned;$("milestoneNext").textContent=next?"Day "+next.day:"All earned";
+ $("profileMiles").innerHTML=state.unlocked.length?MILES.filter(m=>state.unlocked.includes(m.day)).map(mileCard).join(""):'<div class="panel muted">Your first achievement will appear here. Complete Day 1 to earn your first milestone.</div>';
+ $("profileName").textContent=state.name||"Your Name";$("profileLevel").textContent=LEVELS[state.level].name+" · 30-day challenge";$("nameInput").value=state.name||"";$("levelSelect").value=state.level;
+ $("avatar").src=state.photo||avatarFallback();$("profileSince").textContent="Started "+new Date(state.startDate).toLocaleDateString();
+ $("pDays").textContent=n;$("pStreak").textContent=bestStreak();$("pMinutes").textContent=state.minutes||0;$("pRate").textContent=Math.round(n/30*100)+"%";$("profileBar").style.width=n/30*100+"%";renderExtra();
+}
+function mileCard(m){const unlocked=state.unlocked.includes(m.day);return `<article class="panel mile ${unlocked?"unlocked":"locked"}"><div class="medalbox"><div class="medal">${unlocked?m.icon:"🔒"}</div></div><div class="status">${unlocked?"✓ ACHIEVEMENT UNLOCKED":"LOCKED · "+m.day+" DAYS"}</div><h3>${m.title}</h3><p class="quote">“${m.quote}”</p><button class="play" onclick="playQuote(${m.day})">▶ Play motivation</button></article>`}
+function setLevel(key){state.level=key;save();render()}
+function selectDay(day){selectedDay=day;render()}
+function completeToday(mins){
+ const day=state.completed.length+1;if(day>30||state.completed.includes(day))return;
+ const info=planFor(day);state.completed.push(day);state.minutes=(state.minutes||0)+(mins||parseInt(info.time)||0);state.logs[day]=new Date().toISOString();
+ const newly=MILES.filter(m=>day>=m.day&&!state.unlocked.includes(m.day));
+ newly.forEach(m=>state.unlocked.push(m.day));state.bestStreak=Math.max(state.bestStreak||0,bestStreak());save();render();
+ if(newly.length){showUnlock(newly[newly.length-1])}else if(!mins){alert("Workout completed! Keep that promise to yourself.")}
+}
+function showUnlock(m){currentQuote=m.quote;$("modalIcon").textContent=m.icon;$("modalTitle").textContent=m.title;$("modalQuote").textContent=m.quote;$("unlockModal").classList.add("show");confetti();playCurrentQuote()}
+function closeModal(){$("unlockModal").classList.remove("show")}
+function confetti(){for(let i=0;i<85;i++){const el=document.createElement("i");el.className="confetti";el.style.left=Math.random()*100+"vw";el.style.background=["#69e39a","#ffd477","#b8f27b","#fff","#ff8a80"][i%5];el.style.setProperty("--drift",(Math.random()*240-120)+"px");el.style.animationDelay=Math.random()*.65+"s";el.style.transform=`rotate(${Math.random()*360}deg)`;document.body.appendChild(el);setTimeout(()=>el.remove(),3600)}}
+function playQuote(day){const m=MILES.find(x=>x.day===day);if(!m)return;currentQuote=m.quote;speak(m.quote)}
+function playCurrentQuote(){if(currentQuote)speak(currentQuote)}
+function saveProfile(){state.name=$("nameInput").value.trim()||"Your Name";state.level=$("levelSelect").value;save();render();alert("Profile saved!")}
+$("photoInput").addEventListener("change",e=>{const file=e.target.files[0];if(!file)return;if(file.size>2*1024*1024){alert("Please choose an image under 2 MB.");return}const reader=new FileReader();reader.onload=()=>{state.photo=reader.result;save();render()};reader.readAsDataURL(file)});
+function avatarFallback(){return "data:image/svg+xml,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120"><rect width="120" height="120" rx="60" fill="#214a31"/><circle cx="60" cy="43" r="22" fill="#b8f27b"/><path d="M20 115c3-28 18-42 40-42s37 14 40 42" fill="#69e39a"/></svg>')}
+
+/* ===== Auth ===== */
+const ACC="rt_accounts",SES="rt_session";let authMode="login";
+const defState=()=>({name:"Your Name",level:"beginner",completed:[],logs:{},unlocked:[],minutes:0,photo:"",startDate:new Date().toISOString(),bestStreak:0,body:{},focus:"Full",coach:true,rate:.95,voice:""});
+const accts=()=>{try{return JSON.parse(localStorage.getItem(ACC)||"{}")}catch(e){return{}}};
+async function hash(s){try{const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode("rt:"+s));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("")}catch(e){let h=5381;for(const c of "rt:"+s)h=(h*33^c.charCodeAt(0))>>>0;return"f"+h}}
+function loadUser(email){user=email;state=defState();try{state={...state,...JSON.parse(localStorage.getItem("riseTrain_u_"+email)||"{}")}}catch(e){}}
+function authTab(m){authMode=m;$("nameRow").style.display=m==="signup"?"":"none";$("tabLogin").classList.toggle("active",m==="login");$("tabSignup").classList.toggle("active",m==="signup");$("authGo").textContent=m==="signup"?"Create account":"Log in";$("authErr").textContent=""}
+function showAuth(){$("auth").classList.add("show");$("userBtn").style.display="none";authTab(Object.keys(accts()).length?"login":"signup")}
+async function doAuth(){
+ const email=$("authEmail").value.trim().toLowerCase(),pw=$("authPw").value,nm=$("authName").value.trim(),err=t=>{$("authErr").textContent=t};
+ if(!/^\S+@\S+\.\S+$/.test(email))return err("Enter a valid email.");
+ if(pw.length<6)return err("Password must be at least 6 characters.");
+ const A=accts(),h=await hash(pw);
+ if(authMode==="signup"){
+  if(A[email])return err("Account already exists. Please log in.");
+  if(!nm)return err("Please enter your name.");
+  const old=!Object.keys(A).length&&localStorage.getItem("riseTrain_v2");
+  A[email]={h};localStorage.setItem(ACC,JSON.stringify(A));
+  if(old)localStorage.setItem("riseTrain_u_"+email,old);
+  loadUser(email);state.name=nm;save();
+ }else{
+  if(!A[email]||A[email].h!==h)return err("Wrong email or password.");
+  loadUser(email);
+ }
+ localStorage.setItem(SES,email);$("authPw").value="";enter();
+ speak(authMode==="signup"?"Welcome, "+first()+"! Let's build a stronger you.":"Welcome back, "+first()+"! Ready to train?");
+}
+function enter(){$("auth").classList.remove("show");$("userBtn").style.display="";selectedDay=Math.min(state.completed.length+1,30);fillVoiceSel();render()}
+function logout(){stopSession(true);cancelSpeech();localStorage.removeItem(SES);user=null;state=null;showAuth()}
+function boot(){const s=localStorage.getItem(SES);if(s&&accts()[s]){loadUser(s);enter()}else showAuth()}
+
+/* ===== Voice ===== */
+let VOICES=[];const first=()=>state&&state.name&&state.name!=="Your Name"?state.name.split(" ")[0]:"champ";
+const cancelSpeech=()=>{try{speechSynthesis.cancel()}catch(e){}};
+const getV=()=>window.speechSynthesis?speechSynthesis.getVoices().filter(v=>/^(en|hi)/i.test(v.lang)):[];
+function score(v){let s=0;if(/natural|neural|online|premium|enhanced/i.test(v.name))s+=4;if(/google/i.test(v.name))s+=2;if(/en-IN/i.test(v.lang))s+=2;else if(/en-(GB|US)/i.test(v.lang))s+=1;if(/female|samantha|aria|jenny|zira|heera|neerja|karen/i.test(v.name))s+=1;return s}
+function bestVoice(){if(!VOICES.length)VOICES=getV();const sv=state&&state.voice&&VOICES.find(v=>v.name===state.voice);return sv||[...VOICES].sort((a,b)=>score(b)-score(a))[0]}
+function fillVoiceSel(){VOICES=getV();const b=state?bestVoice():null;$("voiceSel").innerHTML=VOICES.map(v=>`<option value="${v.name}" ${b&&b.name===v.name?"selected":""}>${v.name} (${v.lang})</option>`).join("")||"<option>Default voice</option>"}
+if(window.speechSynthesis)speechSynthesis.onvoiceschanged=fillVoiceSel;
+function speak(line){if(!window.speechSynthesis||!state)return;cancelSpeech();const u=new SpeechSynthesisUtterance(line),v=bestVoice();if(v){u.voice=v;u.lang=v.lang}else u.lang="en-IN";u.rate=state.rate||.95;u.pitch=1.05;speechSynthesis.speak(u)}
+function testVoice(){speak("Hi "+first()+"! I'm your coach. Let's get stronger today.")}
+$("voiceSel").onchange=e=>{state.voice=e.target.value;save();testVoice()};
+$("rateIn").onchange=e=>{state.rate=+e.target.value;save();testVoice()};
+$("coachChk").onchange=e=>{state.coach=e.target.checked;save()};
+
+/* ===== Exercise library ===== */
+const E=(n,p,l,m,r,s,t,sec)=>({n,p,l,m,r,s:s.split("|"),t,sec});
+const EX=[
+E("Squats","Lower",0,"Quads · Glutes","12 reps","Stand with feet shoulder-width apart|Push hips back and bend knees to about 90°|Press through your heels to stand tall","Keep chest up, knees in line with toes"),
+E("Chair squats","Lower",0,"Quads · Glutes","10 reps","Stand in front of a sturdy chair|Sit back until you lightly touch the seat|Stand up using your legs, not momentum","Don't drop onto the chair"),
+E("Reverse lunges","Lower",0,"Quads · Glutes · Hamstrings","10 per leg","Step one foot back|Lower until both knees are about 90°|Push through the front heel to return","Keep your torso upright"),
+E("Glute bridges","Lower",0,"Glutes · Hamstrings","15 reps","Lie on your back, knees bent, feet flat|Squeeze glutes and lift your hips|Lower slowly","Don't over-arch your lower back"),
+E("Lunges","Lower",1,"Quads · Glutes","10 per leg","Step forward with one foot|Lower the back knee toward the floor|Push back to standing, switch legs","Front knee stays over the ankle"),
+E("Calf raises","Lower",1,"Calves","20 reps","Stand tall, feet hip-width apart|Rise high onto your toes|Lower slowly","Touch a wall for balance"),
+E("Squat jumps","Lower",2,"Quads · Glutes · Calves","12 reps","Lower into a squat|Explode upward|Land softly and flow into the next rep","Land with soft knees"),
+E("Walking lunges","Lower",2,"Quads · Glutes","12 per leg","Step forward into a lunge|Push off and bring the back foot forward|Alternate legs as you travel","Take long, controlled steps"),
+E("Split squats","Lower",2,"Quads · Glutes","10 per leg","Take a long staggered stance|Lower straight down|Drive up; finish all reps, then switch","Keep weight on the front heel"),
+E("Hip thrusts","Lower",2,"Glutes · Hamstrings","15 reps","Rest upper back on a sofa or bench, feet flat|Drive hips up until your body is level|Squeeze at the top, lower slowly","Tuck your chin, ribs down"),
+E("Wall push-ups","Upper",0,"Chest · Shoulders · Triceps","12 reps","Hands on a wall at chest height, arms straight|Bend elbows to bring chest toward the wall|Push back to the start","Step feet back to make it harder"),
+E("Push-ups","Upper",1,"Chest · Shoulders · Triceps","10 reps","Hands under shoulders, body in one straight line|Lower chest to just above the floor|Press back up","Drop to your knees if form slips"),
+E("Pike push-ups","Upper",1,"Shoulders · Triceps","8 reps","Make an upside-down V with hips high|Bend elbows to lower your head toward the floor|Press back up","Keep hips high the whole time"),
+E("Triceps dips","Upper",1,"Triceps · Shoulders","10 reps","Hands on a chair edge behind you, knees bent|Bend elbows to lower your hips|Press up to straight arms","Elbows point straight back"),
+E("Arm circles","Upper",0,"Shoulders","15 each way","Stand tall, arms straight out to the sides|Make small circles, then bigger|Switch direction halfway","Keep shoulders relaxed"),
+E("Shoulder taps","Upper",2,"Shoulders · Core","20 taps","Start in a high plank, feet wide|Tap one shoulder with the opposite hand|Alternate without rocking your hips","Wider feet = more balance"),
+E("Knee plank","Core",0,"Abs · Shoulders","Hold","Forearms on the floor, knees down|Make a straight line from knees to head|Brace your abs and breathe","Don't let hips sag"),
+E("Plank","Core",1,"Abs · Shoulders · Glutes","Hold","Forearms down, body straight from head to heels|Squeeze abs and glutes|Breathe steadily","Look at the floor, neck neutral"),
+E("Dead bugs","Core",0,"Deep abs","10 per side","Lie on your back, arms up, knees over hips|Lower opposite arm and leg slowly|Return and switch sides","Press lower back into the floor"),
+E("Bird dogs","Core",0,"Core · Back · Glutes","8 per side","On hands and knees|Reach opposite arm and leg out long|Hold 2 seconds, return, switch","Keep hips level"),
+E("Crunches","Core",0,"Upper abs","15 reps","Lie back, knees bent, hands by your head|Lift shoulders off the floor|Lower with control","Don't pull on your neck"),
+E("Heel taps","Core",0,"Side abs","20 taps","Lie back, knees bent, shoulders slightly lifted|Reach to tap one heel|Alternate sides","Keep your abs tight"),
+E("Bicycle crunches","Core",1,"Abs · Obliques","20 reps","Lie back, hands by your head|Bring opposite elbow to knee|Pedal your legs in a smooth rhythm","Slow and controlled"),
+E("Leg raises","Core",1,"Lower abs","12 reps","Lie flat, legs straight|Lift legs to 90°|Lower slowly without touching the floor","Bend knees if your back arches"),
+E("Russian twists","Core",1,"Obliques","20 twists","Sit, lean back slightly, feet low|Rotate your torso side to side|Touch the floor beside you each time","Keep your chest lifted"),
+E("Side plank","Core",2,"Obliques · Shoulders","Hold each side","Lie on your side, forearm under shoulder|Lift hips into a straight line|Switch sides halfway","Stack your feet"),
+E("Hollow hold","Core",2,"Deep abs","Hold","Lie on your back|Lift shoulders and straight legs off the floor|Press your lower back down","Lower legs if your back lifts"),
+E("March in place","Cardio",0,"Legs · Heart","Keep moving","Stand tall|March lifting knees to hip height|Swing your arms","Stay light on your feet"),
+E("Step jacks","Cardio",0,"Full body · Heart","Keep moving","Step one foot out as arms go up|Step it back in|Alternate sides","No jumping needed"),
+E("Jumping jacks","Cardio",1,"Full body · Heart","Keep moving","Jump feet wide as arms go overhead|Jump back to the start|Keep a steady rhythm","Land softly"),
+E("High knees","Cardio",1,"Legs · Core · Heart","Keep moving","Run in place|Drive knees up to hip height|Pump your arms","Stay on the balls of your feet"),
+E("Mountain climbers","Cardio",1,"Core · Shoulders · Heart","Keep moving","Start in a high plank|Drive knees toward your chest, alternating|Keep hips low","Hands under shoulders"),
+E("Burpees","Cardio",2,"Full body · Heart","8 reps","Squat and place hands on the floor|Jump feet back, do a push-up|Jump in and leap up","Slow down to keep good form"),
+E("Skaters","Cardio",2,"Legs · Glutes · Heart","Keep moving","Leap sideways onto one leg|Swing the other leg behind|Leap to the other side","Bend your knee on landing"),
+E("Gentle mobility","Mobility",0,"Joints · Spine","Slow flow","Roll shoulders and neck gently|Circle hips and ankles|Reach arms overhead and side to side","Move slowly, no pain",60),
+E("Hip mobility","Mobility",0,"Hips","Slow flow","Do slow hip circles each way|Step into a gentle lunge stretch|Switch sides","Breathe into the stretch",60),
+E("Full body stretch","Mobility",0,"Whole body","Hold","Reach up tall, then fold forward|Stretch quads, hamstrings and chest|Hold each stretch gently","Never bounce",60),
+E("Deep breathing","Mobility",0,"Calm · Recovery","Breathe","Sit or stand comfortably|Inhale 4 seconds through the nose|Exhale 6 seconds slowly","Relax your shoulders",90),
+E("Easy walk","Mobility",0,"Legs · Heart","Walk","Walk at a comfortable pace|Swing your arms naturally|Breathe steadily","Walk in place if indoors",120)
+];
+const AL={"easy plank":"knee plank","marching":"march in place","glute bridge":"glute bridges","jump squats":"squat jumps","dips":"triceps dips","walk":"easy walk","stretch":"full body stretch","mobility":"gentle mobility"};
+const findEx=n=>{n=n.trim().toLowerCase();n=AL[n]||n;return EX.find(e=>e.n.toLowerCase()===n)};
+const ICON={Lower:"🦵",Upper:"💪",Core:"🎯",Cardio:"❤️",Mobility:"🧘"},PART={Full:"🏋️ Full body",Upper:"💪 Upper body",Lower:"🦵 Lower body",Core:"🎯 Core",Cardio:"❤️ Cardio"};
+const exCard=e=>`<div class="ex p-${e.p}"><div class="exhead"><span class="exicon">${ICON[e.p]}</span><h4>${e.n}</h4></div><div class="exbody"><span class="chip">${e.p}</span><span class="chip">${e.m}</span><span class="chip">${e.sec?e.sec+" sec":e.r}</span><ol>${e.s.map(x=>`<li>${x}</li>`).join("")}</ol><div class="tip">💡 ${e.t}</div></div></div>`;
+const LV=()=>["beginner","intermediate","advanced"].indexOf(state.level);
+
+/* ===== Body ===== */
+function saveBody(){state.body={age:+$("ageIn").value||0,h:+$("htIn").value||0,w:+$("wtIn").value||0,goal:$("goalIn").value};state.focus=$("focusIn").value;save();render()}
+function bmiInfo(){const{h,w}=state.body||{};if(!h||!w)return"Enter your height and weight to see your BMI and tips.";const b=w/((h/100)**2);const c=b<18.5?["Underweight","Add strength work, enough protein and good rest."]:b<25?["Healthy range","Great — keep a balanced mix of strength and cardio."]:b<30?["Overweight range","Add daily walking and low-impact cardio; progress steadily."]:["High range","Start with low-impact moves at Beginner level and build slowly; check with a doctor if unsure."];return`<b>BMI ${b.toFixed(1)} — ${c[0]}</b><br>${c[1]}<br><span class="muted small">Goal: ${(state.body||{}).goal||"Stay fit"} · BMI is only a rough guide; it doesn't measure muscle or body fat.</span>`}
+
+/* ===== Sessions ===== */
+function buildSession(names,label,day,target){
+ const list=names.map(findEx).filter(Boolean),lv=LV(),work=[30,40,50][lv],rest=[20,15,10][lv];
+ const rs=e=>e.p==="Mobility"?5:rest,per=list.reduce((a,e)=>a+(e.sec||work)+rs(e),0);
+ const rounds=Math.max(1,Math.min(4,Math.round(target*60/per))),steps=[];
+ for(let r=1;r<=rounds;r++)list.forEach(e=>steps.push({e,r,sec:e.sec||work,rest:rs(e)}));
+ const tot=steps.reduce((a,s)=>a+s.sec+s.rest,0)-(steps.length?steps[steps.length-1].rest:0);
+ return{label,day,steps,list,rounds,work,rest,min:Math.round(tot/60)}}
+function startDay(day){const p=planFor(day);openPlayer(buildSession(p.desc.split(" · "),"Day "+day+" · "+p.title,day,parseInt(p.time)))}
+function startPart(part){const lv=LV(),used=new Set(),out=[];(part==="Full"?["Lower","Upper","Core","Cardio","Lower","Upper"]:Array(5).fill(part)).forEach(p=>{const e=EX.find(x=>x.p===p&&x.l<=lv&&!used.has(x.n));if(e){used.add(e.n);out.push(e.n)}});openPlayer(buildSession(out,PART[part]+" workout",null,12))}
+function renderExtra(){
+ const d=planFor(selectedDay),S=buildSession(d.desc.split(" · "),"",selectedDay,parseInt(d.time)),seen=new Set();
+ $("dayExercises").innerHTML=`<p class="muted small">⏱ Timer plan: ${S.work}s work · ${S.rest}s rest · ${S.rounds} round${S.rounds>1?"s":""} ≈ ${S.min} min</p>`+S.list.filter(e=>!seen.has(e.n)&&seen.add(e.n)).map(exCard).join("");
+ $("startBtn").textContent="▶ Start Day "+selectedDay+" workout";
+ $("partBtns").innerHTML=Object.keys(PART).map(k=>`<button class="${state.focus===k?"btn":"ghost"}" onclick="startPart('${k}')">${PART[k]}${state.focus===k?" ⭐":""}</button>`).join("");
+ const b=state.body||{};$("ageIn").value=b.age||"";$("htIn").value=b.h||"";$("wtIn").value=b.w||"";$("goalIn").value=b.goal||"Stay fit";$("focusIn").value=state.focus||"Full";$("bmiBox").innerHTML=bmiInfo();
+ $("coachChk").checked=state.coach!==false;$("rateIn").value=state.rate||.95;$("userBtn").textContent="👤 "+first()+" · Log out";
+}
+
+/* ===== Timer player ===== */
+const CIRC=339.3;let P=null,lock=null;
+const say=l=>{if(P&&!P.mute&&state.coach!==false)speak(l)};
+function beep(f){try{const a=beep.c||(beep.c=new AudioContext()),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.15;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.15)}catch(e){}}
+function openPlayer(s){if(!s.steps.length)return;P={s,i:0,ph:"ready",t:0,tot:1,run:false,el:0,mute:false,iv:null};$("muteBtn").textContent="🔊 Voice on";$("player").classList.add("show");drawP()}
+function toggleMute(){P.mute=!P.mute;$("muteBtn").textContent=P.mute?"🔇 Voice off":"🔊 Voice on";if(P.mute)cancelSpeech()}
+function ring(reset){const f=$("ringFg");if(reset){f.style.transition="none";f.style.strokeDashoffset=0;f.getBoundingClientRect();f.style.transition=""}f.style.strokeDashoffset=CIRC*(1-P.t/P.tot)}
+function drawP(){
+ const st=P.s.steps;
+ if(P.ph==="done"){const m=Math.max(1,Math.round(P.el/60));$("plPhase").textContent="DONE";$("plName").textContent="Workout complete 🎉";$("plReps").textContent=m+" min trained · "+st.length+" exercises";$("plTime").textContent="✓";$("plBar").style.width="100%";$("plInfo").innerHTML="";$("goBtn").textContent="Close";return}
+ const v=P.ph==="rest"?st[P.i+1]:st[P.i],e=v.e,nx=st[P.i+(P.ph==="rest"?2:1)];
+ $("plHead").textContent=P.s.label;$("plCount").textContent="Exercise "+(P.i+(P.ph==="rest"?2:1))+" of "+st.length+" · Round "+v.r+"/"+P.s.rounds;
+ $("plBar").style.width=P.i/st.length*100+"%";
+ $("plPhase").textContent={ready:"READY",prep:"GET READY",work:"WORK",rest:"REST · NEXT UP"}[P.ph];
+ $("plName").textContent=e.n;$("plReps").textContent=(e.sec?"":e.r+" · ")+v.sec+" seconds";
+ $("plTime").textContent=P.ph==="ready"?v.sec:P.t;$("ringFg").style.stroke={prep:"#b8f27b",work:"#69e39a",rest:"#ffd477",ready:"#69e39a"}[P.ph];
+ $("plInfo").innerHTML=exCard(e)+(nx?`<p class="muted small">Up next: ${nx.e.n}</p>`:"");
+ $("goBtn").textContent=P.ph==="ready"?"▶ Start":P.run?"⏸ Pause":"▶ Resume";
+}
+function startPhase(ph,t){P.ph=ph;P.t=P.tot=t;drawP();ring(true);beep(ph==="work"?1200:700)}
+function toggleRun(){
+ if(P.ph==="done")return stopSession(true);
+ if(P.ph==="ready"){try{navigator.wakeLock&&navigator.wakeLock.request("screen").then(l=>lock=l)}catch(e){}P.run=true;say("Let's go, "+first()+"! Get ready for "+P.s.steps[0].e.n+".");startPhase("prep",5);P.iv=setInterval(tick,1000);return}
+ P.run=!P.run;if(P.run)say("Resuming.");else cancelSpeech();drawP()
+}
+function tick(){
+ if(!P.run)return;P.el++;P.t--;
+ if(P.t>0){
+  if(P.t<=3)say(String(P.t));
+  else if(P.ph==="work"&&P.tot>=30&&P.t===Math.floor(P.tot/2))say("Halfway there. Keep going!");
+  else if(P.ph==="work"&&P.tot>=30&&P.t===10)say("Ten seconds left. Finish strong!");
+  $("plTime").textContent=P.t;ring();return}
+ const st=P.s.steps,v=st[P.i];
+ if(P.ph==="prep"){startPhase("work",v.sec);say("Go!")}
+ else if(P.ph==="work"){
+  if(P.i>=st.length-1)return finish();
+  if(v.rest>0){const n=st[P.i+1].e;startPhase("rest",v.rest);say("Rest. Next up: "+n.n+(n.sec?"":", "+n.r)+".")}
+  else{P.i++;startPhase("work",st[P.i].sec);say("Go!")}}
+ else{P.i++;startPhase("work",st[P.i].sec);say("Go!")}
+}
+function skip(d){if(["ready","done"].includes(P.ph))return;const n=P.ph==="rest"&&d>0?P.i+1:P.i+d;if(n<0)return;if(n>=P.s.steps.length)return finish();P.i=n;startPhase("work",P.s.steps[n].sec);say(P.s.steps[n].e.n+". Go!")}
+function finish(){
+ clearInterval(P.iv);P.run=false;P.ph="done";const m=Math.max(1,Math.round(P.el/60));
+ say("Workout complete. Amazing work, "+first()+"!");drawP();beep(1500);
+ if(P.s.day&&P.s.day===state.completed.length+1)completeToday(m);else{state.minutes=(state.minutes||0)+m;save();render()}
+}
+function stopSession(force){
+ if(P&&!force&&P.ph!=="done"&&P.ph!=="ready"&&!confirm("Stop this workout?"))return;
+ if(P)clearInterval(P.iv);P=null;cancelSpeech();try{lock&&lock.release()}catch(e){}lock=null;$("player").classList.remove("show")}
+boot();
+</script>
+</body></html>
